@@ -16,6 +16,14 @@
 
 ## セットアップ
 
+必要なもの:
+
+- Node.js `20.9.0` 以上
+- npm
+- VS Code などのコードエディタ
+
+このリポジトリでは、Next.js アプリは `web` ディレクトリにあります。
+
 ```bash
 cd Lecture0-NextJs/web
 npm install
@@ -28,9 +36,13 @@ npm run dev
 http://localhost:3000
 ```
 
+止めるときは、ターミナルで `Ctrl + C` を押します。
+
+もし `3000` 番ポートが使われていると表示されたら、ターミナルに出ている別のURLを開いてください。例: `http://localhost:3001`
+
 ## 進め方
 
-`web` には最初から `TODO(Phase X)` コメントが入っています。その近くのコードを埋めていきます。
+`web` には最初から `TODO(Phase X)` や `Phase X` のコメントが入っています。その近くのコードを確認しながら、未完成の部分を埋めていきます。
 
 進める順番:
 
@@ -120,9 +132,9 @@ src/app/page.tsx
 
 `ProductSearch` はすでに用意されています。ここでは `page.tsx` の state とつなぐ見方に集中します。
 
-`page.tsx` には `TODO(Phase 4-1)` から `TODO(Phase 4-3)` があります。
+`page.tsx` には `Phase 4-1` から `Phase 4-3` のコメントがあります。
 
-ここでは次の 3 行を自分で書く想定で進めます。
+ここでは次の 3 行が、それぞれ何を覚えているかを確認します。
 
 ```tsx
 const [searchTerm, setSearchTerm] = useState("");
@@ -268,6 +280,26 @@ useState や useEffect を使うファイルの先頭に "use client" を書く
 localStorage は "use client" のあるファイルで、useEffect の中から使う
 ```
 
+## 困ったときの確認順
+
+検索が動かない:
+
+1. `src/utils/productFilters.ts` の `includes("")` が `includes(normalizedSearchTerm)` になっているか確認する
+2. `src/app/page.tsx` の `filterProducts(products, searchTerm, selectedCategory)` を確認する
+3. 保存してからブラウザの入力をやり直す
+
+詳細ページが表示されない:
+
+1. 商品カードのリンクが `/products/${product.id}` になっているか確認する
+2. `products.ts` の `id` が重複していないか確認する
+3. `src/app/products/[id]/page.tsx` の `products.find(...)` が `item.id === id` を見ているか確認する
+
+TypeScript エラーが出た:
+
+1. エラーに出ているファイル名と行番号を見る
+2. `string` と `number` を取り違えていないか確認する
+3. props の名前が親と子で一致しているか確認する
+
 ## 完成確認
 
 最低限ここまで動けば OK です。
@@ -279,4 +311,4 @@ localStorage は "use client" のあるファイルで、useEffect の中から�
 - 商品カードから詳細ページへ移動できる
 - 詳細ページに在庫と評価が表示される
 
-余裕がある人は `03-challenges.md` に進んでください。メンター側には別で `98-challenge-answers.md` が用意されています。
+余裕がある人は `02-challenges.md` に進んでください。メンター側には別で `03-challenge-answers.md` が用意されています。

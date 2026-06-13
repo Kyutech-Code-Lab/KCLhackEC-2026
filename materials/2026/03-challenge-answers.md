@@ -1,6 +1,6 @@
 # チャレンジ解答メモ
 
-このファイルは参加者向けではありません。メンター / 講師が `03-challenges.md` の解答例や説明方針を確認するための内部資料です。
+このファイルは参加者向けではありません。メンター / 講師が `02-challenges.md` の解答例や説明方針を確認するための内部資料です。
 
 ## Challenge 1: 商品を並び替える
 
@@ -113,7 +113,8 @@ useEffect(() => {
     params.delete("category");
   }
 
-  router.replace(`/?${params.toString()}`);
+  const queryString = params.toString();
+  router.replace(queryString ? `/?${queryString}` : "/");
 }, [router, searchParams, searchTerm, selectedCategory]);
 ```
 
@@ -121,6 +122,7 @@ useEffect(() => {
 
 - まずは `q` だけでもよい
 - 無限ループの説明は難しいので、初心者相手なら「URL 更新用の effect」と割り切ってよい
+- production build で `useSearchParams` 周りのエラーが出る場合は、該当部分を小さな Client Component に切り出して `Suspense` 境界で囲む
 
 ## Challenge 5: 商品データを JSON に切り出す
 

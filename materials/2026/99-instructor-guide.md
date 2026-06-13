@@ -32,13 +32,16 @@ npm run dev
 - 商品詳細ページへ移動できる
 - カテゴリ選択が動く
 - 検索欄に入力できる
-- TODO が講座順に並んでいる
+- TODO と Phase コメントが講座順に並んでいる
 
 投影用スライド:
 
 ```text
-Lecture0-NextJs/materials/2026/slides/kcl-frontend-2026.html
+Lecture0-NextJs/materials/2026/slides/kcl-frontend-intro.pptx
+Lecture0-NextJs/materials/2026/slides/kcl-frontend-2026-handson-ans.pptx
 ```
+
+`kcl-frontend-intro.pptx` は、React / Next.js の基本概念を最初にさらうために使います。`kcl-frontend-2026-handson-ans.pptx` は、ハンズオン中の説明と答え合わせに使います。
 
 ## 進行方針
 
@@ -54,8 +57,8 @@ Lecture0-NextJs/materials/2026/slides/kcl-frontend-2026.html
 | 0:10-0:25 | 型と商品データ | `Product` と `products` を説明し、商品を 1 件追加する |
 | 0:25-0:40 | 商品カード | `ProductCard` の TODO を埋める |
 | 0:40-0:55 | `map` と一覧表示 | `products.map((_, index) => ...)` を `products.map((product) => ...)` に直しながら `ProductList` の TODO を埋める |
-| 0:55-1:10 | `useState` と検索 UI | `page.tsx` で検索文字列、カテゴリ、表示結果の state を参加者に書かせる |
-| 1:10-1:25 | `useEffect` と詳細ページ | `filterProducts` を呼ぶ effect と `[id]` ページの TODO を埋める |
+| 0:55-1:10 | `useState` と検索 UI | `page.tsx` で検索文字列、カテゴリ、表示結果の state の役割を確認する |
+| 1:10-1:25 | `useEffect` と詳細ページ | `filterProducts` を呼ぶ effect と `[id]` ページの在庫・評価 TODO を埋める |
 | 1:25-1:30 | 発展課題案内 | 中級者向け課題とハッカソン応用を紹介する |
 
 ## 120分進行
@@ -98,6 +101,8 @@ Lecture0-NextJs/materials/2026/slides/kcl-frontend-2026.html
 
 ただし今年版では、検索機能の核として `useEffect` を実際に書かせます。`filterProducts(products, searchTerm, selectedCategory)` を呼び、その結果を `setFilteredProducts(...)` に渡すところまでは本編で扱ってください。
 
+この形は、`useEffect` の役割を見せるための教材上の設計です。実務では、検索結果のような派生データを state に入れず、render 中に計算する設計もあります。初回講座では深入りせず、「今回は `useEffect` の使いどころを体験するためにこの形にしている」と補足してください。
+
 ## 詰まりどころ
 
 `"use client"` を忘れる:
@@ -137,9 +142,21 @@ Lecture0-NextJs/materials/2026/slides/kcl-frontend-2026.html
 - ブラウザだけの機能なので、`useEffect` の中で使う
 - 初回講座では「サーバー側で動く時間もある」とだけ説明する
 
+検索が動かない:
+
+- `productFilters.ts` の `includes("")` が残っていないか確認する
+- `page.tsx` の `filterProducts(products, searchTerm, selectedCategory)` を確認する
+- ブラウザで入力を消してからもう一度検索する
+
+詳細ページが期待通りに出ない:
+
+- 商品カードのリンクが `/products/${product.id}` になっているか確認する
+- `products.ts` の `id` が重複していないか確認する
+- `[id]/page.tsx` の在庫と評価の `0` が残っていないか確認する
+
 ## 中級者への投げ方
 
-早く終わった人には、講師説明を止めずに `03-challenges.md` を渡します。メンター側は `98-challenge-answers.md` を見ながらサポートしてください。おすすめ順は以下です。
+早く終わった人には、講師説明を止めずに `02-challenges.md` を渡します。メンター側は `03-challenge-answers.md` を見ながらサポートしてください。おすすめ順は以下です。
 
 1. 商品の並び替え
 2. 在庫ゼロ表示

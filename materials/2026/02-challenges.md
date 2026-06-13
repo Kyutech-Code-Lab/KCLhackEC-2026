@@ -86,6 +86,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 - 初心者向け本編より少し難しい
 - まずは検索キーワードだけでよい
+- `useSearchParams` を使うコンポーネントは Client Component にする
+- production build で止まる場合は、`Suspense` 境界で囲むか、検索URLを扱う部分を小さな Client Component に切り出す
 
 ## Challenge 5: 商品データをJSONファイルに切り出す
 

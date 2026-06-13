@@ -62,13 +62,13 @@ function readFavoriteIdsFromStorage(): string[] {
 }
 
 export default function Home() {
-  // TODO(Phase 4-1):
-  // useState("") を使って、検索欄に入力された文字を管理します。
+  // Phase 4-1:
+  // useState("") で、検索欄に入力された文字を管理します。
   const [searchTerm, setSearchTerm] = useState("");
-  // TODO(Phase 4-2):
-  // useState("すべて") を使って、今どのカテゴリを選んでいるかを管理します。
+  // Phase 4-2:
+  // useState("すべて") で、今どのカテゴリを選んでいるかを管理します。
   const [selectedCategory, setSelectedCategory] = useState("すべて");
-  // TODO(Phase 4-3):
+  // Phase 4-3:
   // 絞り込んだ結果を表示するための state も用意します。
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
