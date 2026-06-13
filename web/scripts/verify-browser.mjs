@@ -4,12 +4,25 @@ import { mkdir, rm } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import process from "node:process";
+import { pathToFileURL } from "node:url";
 
 const chromePath =
   process.env.CHROME_PATH ??
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const debugPort = Number(process.env.CHROME_DEBUG_PORT ?? "9237");
 const appOrigin = process.env.APP_ORIGIN ?? "http://localhost:3000";
+const rootDir = path.resolve(process.cwd(), "..");
+const slideUrl = pathToFileURL(
+  path.join(rootDir, "materials", "2026", "slides", "kcl-frontend-2026.html"),
+).href;
+
+const viewports = [
+  { width: 1920, height: 1080, name: "desktop-hd" },
+  { width: 1280, height: 720, name: "desktop" },
+  { width: 768, height: 1024, name: "tablet" },
+  { width: 375, height: 667, name: "mobile" },
+  { width: 667, height: 375, name: "mobile-landscape" },
+];
 
 class CdpClient {
   constructor(webSocket) {
@@ -174,6 +187,114 @@ async function evaluate(client, sessionId, expression) {
   return result.result.value;
 }
 
+async function pressKey(client, sessionId, key, code, keyCode) {
+  await client.send(
+    "Input.dispatchKeyEvent",
+    { code, key, type: "keyDown", windowsVirtualKeyCode: keyCode },
+    sessionId,
+  );
+  await client.send(
+    "Input.dispatchKeyEvent",
+    { code, key, type: "keyUp", windowsVirtualKeyCode: keyCode },
+    sessionId,
+  );
+}
+
+async function verifySlides(client, sessionId) {
+  const failures = [];
+
+  for (const viewport of viewports) {
+    await setViewport(client, sessionId, viewport);
+    await navigate(client, sessionId, slideUrl);
+    await new Promise((resolve) => setTimeout(resolve, 250));
+
+    const result = await evaluate(
+      client,
+      sessionId,
+      `(() => {
+        document.querySelectorAll(".slide").forEach((slide) => slide.classList.add("is-active"));
+        const slideData = [...document.querySelectorAll(".slide")].map((slide, index) => ({
+          index: index + 1,
+          scrollWidth: slide.scrollWidth,
+          clientWidth: slide.clientWidth,
+          scrollHeight: slide.scrollHeight,
+          clientHeight: slide.clientHeight
+        }));
+        const badContents = [...document.querySelectorAll(".slide-content")].map((content, index) => {
+          const contentRect = content.getBoundingClientRect();
+          const badChildren = [...content.children]
+            .filter((child) => getComputedStyle(child).display !== "none")
+            .map((child) => {
+              const rect = child.getBoundingClientRect();
+              return {
+                tag: child.tagName.toLowerCase(),
+                top: Math.round(rect.top),
+                right: Math.round(rect.right),
+                bottom: Math.round(rect.bottom),
+                left: Math.round(rect.left)
+              };
+            })
+            .filter((rect) =>
+              rect.left < contentRect.left - 2 ||
+              rect.right > contentRect.right + 2 ||
+              rect.top < contentRect.top - 2 ||
+              rect.bottom > contentRect.bottom + 2
+            );
+
+          return badChildren.length > 0 ? { index: index + 1, badChildren } : null;
+        }).filter(Boolean);
+        return {
+          title: document.title,
+          slideCount: slideData.length,
+          horizontalOverflow: document.documentElement.scrollWidth > window.innerWidth + 2,
+          badSlides: slideData.filter((item) => item.scrollWidth > item.clientWidth + 2 || item.scrollHeight > item.clientHeight + 2),
+          badContents
+        };
+      })()`,
+    );
+
+    if (result.slideCount !== 26) {
+      failures.push(`${viewport.name}: expected 26 slides, found ${result.slideCount}`);
+    }
+
+    if (result.horizontalOverflow) {
+      failures.push(`${viewport.name}: document has horizontal overflow`);
+    }
+
+    if (result.badSlides.length > 0 || result.badContents.length > 0) {
+      failures.push(
+        `${viewport.name}: slide/content overflow ${JSON.stringify({
+          slides: result.badSlides,
+          contents: result.badContents,
+        })}`,
+      );
+    }
+  }
+
+  await setViewport(client, sessionId, { width: 1280, height: 720 });
+  await navigate(client, sessionId, slideUrl);
+  await pressKey(client, sessionId, "ArrowRight", "ArrowRight", 39);
+  await new Promise((resolve) => setTimeout(resolve, 650));
+
+  const navigationResult = await evaluate(
+    client,
+    sessionId,
+    `(() => ({
+      title: document.title,
+      scrollY: Math.round(window.scrollY),
+      counter: document.querySelector(".slide-number")?.textContent
+    }))()`,
+  );
+
+  if (!navigationResult.counter?.startsWith("2 /")) {
+    failures.push(`keyboard navigation did not advance: ${JSON.stringify(navigationResult)}`);
+  }
+
+  if (failures.length > 0) {
+    throw new Error(`Slide verification failed:\n${failures.join("\n")}`);
+  }
+}
+
 async function verifyApp(client, sessionId) {
   await setViewport(client, sessionId, { width: 1280, height: 720 });
   await navigate(client, sessionId, appOrigin);
@@ -189,11 +310,11 @@ async function verifyApp(client, sessionId) {
     }))()`,
   );
 
-  if (!home.heading?.includes("KCL Shop")) {
+  if (!home.heading?.includes("ショッピングアプリ")) {
     throw new Error(`Unexpected home heading: ${JSON.stringify(home)}`);
   }
 
-  if (home.productCount < 4 || !home.hasSearch) {
+  if (home.productCount !== 8 || !home.hasSearch) {
     throw new Error(`Unexpected home state: ${JSON.stringify(home)}`);
   }
 
@@ -275,8 +396,23 @@ async function verifyApp(client, sessionId) {
     }))()`,
   );
 
-  if (!detail.heading || !detail.hasBackLink) {
+  if (detail.heading !== "ポケットスピーカー" || !detail.hasBackLink) {
     throw new Error(`Unexpected detail page: ${JSON.stringify(detail)}`);
+  }
+
+  await navigate(client, sessionId, `${appOrigin}/order`);
+  const order = await evaluate(
+    client,
+    sessionId,
+    `(() => ({
+      heading: document.querySelector("h1")?.textContent?.trim(),
+      inputCount: document.querySelectorAll("input, textarea, select").length,
+      hasSubmit: [...document.querySelectorAll("button")].some((button) => button.textContent?.includes("入力内容"))
+    }))()`,
+  );
+
+  if (order.heading !== "注文フォーム" || order.inputCount < 5 || !order.hasSubmit) {
+    throw new Error(`Unexpected order page: ${JSON.stringify(order)}`);
   }
 }
 
@@ -307,6 +443,7 @@ try {
   const client = await CdpClient.connect(version.webSocketDebuggerUrl);
   const { sessionId, targetId } = await createPage(client);
 
+  await verifySlides(client, sessionId);
   await verifyApp(client, sessionId);
   await client.send("Target.closeTarget", { targetId });
   client.close();

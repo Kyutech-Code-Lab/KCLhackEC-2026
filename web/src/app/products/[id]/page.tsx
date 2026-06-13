@@ -8,7 +8,7 @@ import { formatPrice } from "@/utils/formatPrice";
 
 type ProductDetailPageProps = {
   params: Promise<{
-    id: string;
+    id?: string;
   }>;
 };
 
@@ -18,7 +18,25 @@ export default async function ProductDetailPage({
   // App Router では、URL の [id] に入った値を params から受け取れます。
   const { id } = await params;
 
-  // Phase 6: products.find(...) が、URL の id と商品データをつなげています。
+  if (!id) {
+    return (
+      <div className="app-shell">
+        <Header />
+        <main className="simple-page">
+          <section className="page-panel">
+            <h1 className="section-title">商品を表示できませんでした</h1>
+            <p className="muted-text">
+              商品 ID が見つからないため、詳細ページを表示できません。
+            </p>
+            <Link className="text-link" href="/">
+              商品一覧に戻る
+            </Link>
+          </section>
+        </main>
+      </div>
+    );
+  }
+
   const product = products.find((item) => item.id === id);
 
   if (!product) {
@@ -63,13 +81,11 @@ export default async function ProductDetailPage({
             <dl className="detail-list">
               <div>
                 <dt>在庫</dt>
-                {/* TODO(Phase 6): 0 を product.stock に書き換えます。 */}
-                <dd>{0} 個</dd>
+                <dd>{product.stock} 個</dd>
               </div>
               <div>
                 <dt>評価</dt>
-                {/* TODO(Phase 6): 0 を product.rating に書き換えて toFixed(1) で表示します。 */}
-                <dd>{(0).toFixed(1)}</dd>
+                <dd>{product.rating.toFixed(1)}</dd>
               </div>
             </dl>
             <div className="info-box">

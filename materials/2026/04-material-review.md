@@ -82,6 +82,7 @@ searchTerm と selectedCategory は入力・選択の状態。
 filteredProducts は、今画面に表示する商品一覧。
 検索条件が変わったら、次のSTEPで useEffect を使って表示結果を更新する。
 ```
+done
 
 ### スライド14: `useEffect`
 
@@ -240,67 +241,135 @@ READMEまたは講師ガイドに追記する文言:
 
 ## `kcl-frontend-2026-handson-ans.pptx`
 
-### スライド18: 参照ファイル名
+最新確認日: 2026-06-13
+
+ページ番号は未確認対象から外しています。
+
+結論:
+
+- Phase 1-6 の流れは `web` の現行コードと概ね合っています。
+- PPTXの内容に沿って `web` を完成状態にしたところ、lint/typecheck/build とブラウザ操作検証は通りました。
+- ただし、参加者がスライドのコードをそのまま写すと詰まり得る箇所が4点あります。
+
+### スライド3: Phase 1 Answer
 
 現状:
 
 ```text
-03-challenges.md
-98-challenge-answers.md
+imageUrl: "https://example.com/image.jpg",
 ```
+
+問題:
+
+- このURLをそのまま使うと画像が表示されません。
+- 「答えの形」としては問題ありませんが、ハンズオン中にそのまま写す参加者がいると、画像表示で詰まります。
 
 修正案:
 
 ```text
-02-challenges.md
-03-challenge-answers.md
+imageUrl: "https://picsum.photos/id/180/300/200",
 ```
 
-スライド内の該当ブロック差し替え案:
+または、説明として次を足す:
 
 ```text
-参加者が見るもの
-• 01-participant-handson.md
-• 02-challenges.md
-• web の TODO / Phase コメント
-
-メンターが見るもの
-• 03-challenge-answers.md
-• 99-instructor-guide.md
-• この PowerPoint deck
+画像URLは自分で別のURLに変えてよい。
+example.com は形を見せるための仮URL。
 ```
-
-### Answerスライドの扱い
-
-対象:
-
-- スライド7: `Phase 1 Answer`
-- スライド9: `Phase 2 Answer`
-- スライド11: `Phase 3 Answer`
-- スライド13: `Phase 4 Answer`
-- スライド15: `Phase 5 Answer`
-- スライド17: `Phase 6 Answer`
-
-問題:
-
-- 参加者投影用として最初から見せると、答えが先に見える
-- メンター用の答え合わせデッキとしては問題ない
-
-修正案A: メンター用として残す
-
-表紙またはスライド1に次を追加:
-
-```text
-このデッキは講師・メンター用です。
-Answerスライドは作業タイム後の答え合わせで表示します。
-```
-
-修正案B: 参加者投影用に分ける
-
-- Answerスライドを非表示にする
-- または参加者用デッキから Answerスライドを削る
-- 講師用には `kcl-frontend-2026-handson-ans.pptx` として残す
 
 おすすめ:
 
-- 当日は案Aで運用し、Answerスライドを作業タイム後にだけ表示する
+- スライド上の答えコードは、実際に表示できるURLへ変える
+
+### スライド7: Phase 3 Answer
+
+現状の答えコードには、`ProductCard` に渡す必須propsの一部だけが表示されています。
+
+現状:
+
+```tsx
+<ProductCard
+  key={product.id}
+  product={product}
+  cartQuantity={cartItem?.quantity ?? 0}
+  isFavorite={isFavorite}
+/>
+```
+
+問題:
+
+- 現行の `ProductCard` は `onAddToCart` と `onToggleFavorite` も必須です。
+- 参加者がこのスニペットをそのまま写すと TypeScript エラーになります。
+
+修正案:
+
+```tsx
+<ProductCard
+  key={product.id}
+  product={product}
+  cartQuantity={cartItem?.quantity ?? 0}
+  isFavorite={isFavorite}
+  onAddToCart={onAddToCart}
+  onToggleFavorite={onToggleFavorite}
+/>
+```
+
+おすすめ:
+
+- スライド7は上記の完全版にする
+
+### スライド8: Phase 4
+
+現状:
+
+```text
+未完成コード
+```
+
+問題:
+
+- 現行 `web/src/app/page.tsx` では、Phase 4の3つの `useState` は既に書かれています。
+- スライド内の作業タイムも「3つの state が何を覚えるかを言えるようにする」なので、実装より確認フェーズです。
+
+修正案:
+
+```text
+確認するコード
+```
+
+または:
+
+```text
+すでに用意されているコード
+```
+
+おすすめ:
+
+- `未完成コード` を `確認するコード` に変更する
+
+### スライド11: Phase 5 Answer
+
+現状:
+
+```tsx
+product.name.toLowerCase().includes(normalizedSearchTerm)
+```
+
+問題:
+
+- スライド10では `name / description / category` の3箇所を直す作業になっています。
+- Answerが `name` の1行だけだと、初心者には「description と category も同じように直す」が伝わりにくいです。
+
+修正案:
+
+```tsx
+const matchesSearch =
+  normalizedSearchTerm === "" ||
+  product.name.toLowerCase().includes(normalizedSearchTerm) ||
+  product.description.toLowerCase().includes(normalizedSearchTerm) ||
+  product.category.toLowerCase().includes(normalizedSearchTerm);
+```
+
+おすすめ:
+
+- スライド11は、検索条件の完成形を上記の4行で見せる

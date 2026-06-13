@@ -12,13 +12,11 @@ export function filterProducts(
   const normalizedSearchTerm = searchTerm.trim().toLowerCase();
 
   return products.filter((product) => {
-    // TODO(Phase 5): 空文字を normalizedSearchTerm に書き換えて、
-    // name / description / category に検索語が含まれるかを確認します。
     const matchesSearch =
       normalizedSearchTerm === "" ||
-      product.name.toLowerCase().includes("") ||
-      product.description.toLowerCase().includes("") ||
-      product.category.toLowerCase().includes("");
+      product.name.toLowerCase().includes(normalizedSearchTerm) ||
+      product.description.toLowerCase().includes(normalizedSearchTerm) ||
+      product.category.toLowerCase().includes(normalizedSearchTerm);
 
     const matchesCategory =
       selectedCategory === "すべて" || product.category === selectedCategory;

@@ -14,6 +14,16 @@ import { filterProducts, getProductCategories } from "@/utils/productFilters";
 const cartStorageKey = "kcl-shop-cart";
 const favoritesStorageKey = "kcl-shop-favorites";
 const categories = getProductCategories(products);
+const jsonExample = `{
+  "id": "p001",
+  "name": "ワイヤレスイヤホン",
+  "price": 3980
+}`;
+const xmlExample = `<product>
+  <id>p001</id>
+  <name>ワイヤレスイヤホン</name>
+  <price>3980</price>
+</product>`;
 
 function isCartItem(value: unknown): value is CartItem {
   return (
@@ -62,19 +72,14 @@ function readFavoriteIdsFromStorage(): string[] {
 }
 
 export default function Home() {
-  // Phase 4-1:
-  // useState("") で、検索欄に入力された文字を管理します。
   const [searchTerm, setSearchTerm] = useState("");
-  // Phase 4-2:
-  // useState("すべて") で、今どのカテゴリを選んでいるかを管理します。
   const [selectedCategory, setSelectedCategory] = useState("すべて");
-  // Phase 4-3:
-  // 絞り込んだ結果を表示するための state も用意します。
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
   const [hasLoadedStorage, setHasLoadedStorage] = useState(false);
 
+  // localStorage はブラウザだけで使えるため、ページ表示後に復元します。
   useEffect(() => {
     // 教材では useEffect の使い方を見せるため、ここで state に入れ直します。
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -102,12 +107,8 @@ export default function Home() {
 
   // 検索キーワードやカテゴリが変わった後に、表示する商品を更新します。
   useEffect(() => {
-    // TODO(Phase 5):
-    // searchTerm と selectedCategory を使って filterProducts を呼び、
-    // 表示する商品一覧を setFilteredProducts(...) で更新します。
-    // 依存配列には、再計算のきっかけになる state を並べます。
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setFilteredProducts(filterProducts(products, "", "すべて"));
+    setFilteredProducts(filterProducts(products, searchTerm, selectedCategory));
   }, [searchTerm, selectedCategory]);
 
   const cartItemCount = cartItems.reduce(
@@ -120,8 +121,6 @@ export default function Home() {
   }, [cartItemCount]);
 
   function handleAddToCart(productId: string) {
-    // Bonus:
-    // 配列 state は直接書き換えず、map で新しい配列を返します。
     setCartItems((currentItems) => {
       const existingItem = currentItems.find((item) => item.productId === productId);
 
@@ -138,8 +137,6 @@ export default function Home() {
   }
 
   function handleToggleFavorite(productId: string) {
-    // Bonus:
-    // すでに入っていれば filter で削除し、なければ配列をコピーして追加します。
     setFavoriteIds((currentFavoriteIds) => {
       const hasFavorite = currentFavoriteIds.includes(productId);
 
@@ -163,10 +160,10 @@ export default function Home() {
         <section className="hero-section">
           <div>
             <p className="eyebrow">Hands-on Lecture</p>
-            <h1 className="page-title">KCL Shop ハンズオンスターター</h1>
+            <h1 className="page-title">Next.js ではじめるシンプルなショッピングアプリ</h1>
             <p className="page-description">
-              TODO コメントを埋めながら、一覧表示、検索、状態管理、詳細ページを
-              段階的に作っていくための Next.js 入門アプリです。
+              検索、カテゴリ絞り込み、カート、お気に入り、注文フォームまでを
+              App Router でひと通り試せる入門サンプルです。
             </p>
           </div>
 

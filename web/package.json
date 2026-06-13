@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build --webpack",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "next typegen && tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "verify:app-logic": "node --experimental-strip-types --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/verify-app-logic.mjs",
     "verify:materials": "node scripts/verify-materials.mjs",
     "verify:browser": "node scripts/verify-browser.mjs",
