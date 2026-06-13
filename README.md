@@ -12,18 +12,16 @@ Next.js / React / TypeScript の基礎を、架空のショッピングアプリ
 materials/2026/
   00-goals-and-plan.md
   01-participant-handson.md
+  02-instructor-guide.md
   03-challenges.md
-  98-challenge-answers.md
-  99-instructor-guide.md
   slides/
     kcl-frontend-2026.html
 ```
 
 - `00-goals-and-plan.md`: 講座の目標、対象者、時間配分
 - `01-participant-handson.md`: 参加者が手元で進めるハンズオン手順
+- `02-instructor-guide.md`: 講師向けの進行、詰まりどころ、説明順
 - `03-challenges.md`: 早く終わった人、中級者向けの追加課題
-- `98-challenge-answers.md`: メンター向けのチャレンジ解答例
-- `99-instructor-guide.md`: メンター向けの進行、詰まりどころ、説明順
 - `slides/kcl-frontend-2026.html`: ブラウザで開ける投影用スライド
 
 スライドは単体HTMLです。ファイルをブラウザで開くだけで使えます。

@@ -22,7 +22,26 @@
 const sortedProducts = [...filteredProducts].sort((a, b) => a.price - b.price);
 ```
 
-## Challenge 2: 在庫ゼロの商品を表示する
+## Challenge 2: 価格帯フィルターを追加する
+
+目的:
+
+- 複数条件の `filter`
+- フォーム入力の state 管理
+
+仕様:
+
+- 最低価格と最高価格を入力できる
+- 空欄なら条件なし
+- 不正な数値では絞り込まない
+
+考えること:
+
+- 入力値は文字列として入ってくる
+- `Number(value)` の結果が正しい数値か確認する
+- 条件を小さい関数に分けると読みやすい
+
+## Challenge 3: 在庫ゼロの商品を表示する
 
 目的:
 
@@ -43,7 +62,7 @@ const sortedProducts = [...filteredProducts].sort((a, b) => a.price - b.price);
 </Button>
 ```
 
-## Challenge 3: お気に入りだけを見るフィルター
+## Challenge 4: お気に入りだけを見るフィルター
 
 目的:
 
@@ -63,7 +82,7 @@ const matchesFavorite =
   !showFavoritesOnly || favoriteIds.includes(product.id);
 ```
 
-## Challenge 4: 検索状態をURLに反映する
+## Challenge 5: 検索状態をURLに反映する
 
 目的:
 
@@ -87,7 +106,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 - 初心者向け本編より少し難しい
 - まずは検索キーワードだけでよい
 
-## Challenge 5: 商品データをJSONファイルに切り出す
+## Challenge 6: 商品データをJSONファイルに切り出す
 
 目的:
 
@@ -106,25 +125,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 - JSON では末尾カンマが使えない
 - TypeScript の `Product[]` と組み合わせて安全に使う
 
-## Challenge 6: `localStorage` 読み込みの型チェックを強化する
-
-目的:
-
-- `unknown` から安全に値を読む
-- 実行時の型チェックを意識する
-
-仕様:
-
-- `readCartFromStorage` と `readFavoriteIdsFromStorage` を読む
-- `isCartItem` と `isFavoriteIds` の役割を説明できるようにする
-- 余裕があれば、無効なデータを `console.warn` する
-
-考えること:
-
-- `JSON.parse` の結果は信用しない
-- TypeScript の型だけでは実行時エラーは防げない
-- フロントエンドでも境界では入力チェックが必要
-
 ## Challenge 7: 自分のハッカソンテーマに置き換える
 
 目的:
@@ -138,6 +138,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 | 商品 | イベント、作品、ユーザー、タスク |
 | カテゴリ | タグ、学部、難易度、状態 |
 | カート | 選択リスト、比較リスト、お気に入り |
+| 注文フォーム | 投稿フォーム、申し込みフォーム |
 | 商品詳細 | 詳細ページ、プロフィール |
 
 進め方:
