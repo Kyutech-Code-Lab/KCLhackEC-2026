@@ -12,16 +12,14 @@ Next.js / React / TypeScript の基礎を、架空のショッピングアプリ
 materials/2026/
   00-goals-and-plan.md
   01-participant-handson.md
-  02-instructor-guide.md
-  03-challenges.md
-  slides/
-    kcl-frontend-2026.html
+  02-challenges.md
+  03-challenge-answers.md
 ```
 
 - `00-goals-and-plan.md`: 講座の目標、対象者、時間配分
 - `01-participant-handson.md`: 参加者が手元で進めるハンズオン手順
-- `02-instructor-guide.md`: 講師向けの進行、詰まりどころ、説明順
-- `03-challenges.md`: 早く終わった人、中級者向けの追加課題
+- `02-challenges.md`: 早く終わった人、中級者向けの追加課題
+- `03-challenge-answers.md`: 02-challenge-answes.md, の答え
 - `slides/kcl-frontend-2026.html`: ブラウザで開ける投影用スライド
 
 スライドは単体HTMLです。ファイルをブラウザで開くだけで使えます。
@@ -30,7 +28,7 @@ materials/2026/
 
 ```bash
 cd web
-npm run check
+npm run dev
 ```
 
 ## 1. この教材で作るもの
@@ -56,7 +54,7 @@ npm run check
 
 商品カードには、商品名、価格、カテゴリ、画像、説明が表示されます。カード内のリンクから `/products/p001` のような商品詳細ページへ移動できます。
 
-検索欄にキーワードを入力すると商品が絞り込まれ、カテゴリを選ぶとカテゴリでも絞り込めます。お気に入りやカートの内容は `localStorage` に保存されるため、ブラウザを再読み込みしても復元されます。
+検索欄にキーワードを入力すると商品が絞り込まれ、カテゴリを選ぶとカテゴリでも絞り込めます。お気に入りやカートの内容は `localStorage`(発展内容)に保存されるため、ブラウザを再読み込みしても復元されます。
 
 注文ページ `/order` では、名前、メールアドレス、住所、支払い方法、備考を入力できます。ただし実際の購入処理やDB保存は行わず、入力内容を画面に確認表示するだけです。
 
