@@ -310,11 +310,11 @@ async function verifyApp(client, sessionId) {
     }))()`,
   );
 
-  if (!home.heading?.includes("KCL Shop")) {
+  if (!home.heading?.includes("ショッピングアプリ")) {
     throw new Error(`Unexpected home heading: ${JSON.stringify(home)}`);
   }
 
-  if (home.productCount < 4 || !home.hasSearch) {
+  if (home.productCount !== 8 || !home.hasSearch) {
     throw new Error(`Unexpected home state: ${JSON.stringify(home)}`);
   }
 
@@ -396,8 +396,23 @@ async function verifyApp(client, sessionId) {
     }))()`,
   );
 
-  if (!detail.heading || !detail.hasBackLink) {
+  if (detail.heading !== "ポケットスピーカー" || !detail.hasBackLink) {
     throw new Error(`Unexpected detail page: ${JSON.stringify(detail)}`);
+  }
+
+  await navigate(client, sessionId, `${appOrigin}/order`);
+  const order = await evaluate(
+    client,
+    sessionId,
+    `(() => ({
+      heading: document.querySelector("h1")?.textContent?.trim(),
+      inputCount: document.querySelectorAll("input, textarea, select").length,
+      hasSubmit: [...document.querySelectorAll("button")].some((button) => button.textContent?.includes("入力内容"))
+    }))()`,
+  );
+
+  if (order.heading !== "注文フォーム" || order.inputCount < 5 || !order.hasSubmit) {
+    throw new Error(`Unexpected order page: ${JSON.stringify(order)}`);
   }
 }
 

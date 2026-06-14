@@ -21,14 +21,6 @@ export function ProductCard({
   onAddToCart,
   onToggleFavorite,
 }: ProductCardProps) {
-  // TODO(Phase 2): product.description に書き換えて、商品の説明を表示します。
-  const displayDescription = "ここに商品の説明を表示";
-  // TODO(Phase 2): 0 を product.price に書き換えて、formatPrice で価格を表示します。
-  const displayPrice = formatPrice(0);
-  // TODO(Phase 2): 0 を product.rating / product.stock に書き換えて、補足情報を完成させます。
-  const displayRating = 0;
-  const displayStock = 0;
-
   return (
     <article className="product-card">
       <img
@@ -47,14 +39,14 @@ export function ProductCard({
 
         <div>
           <h3 className="product-card__title">{product.name}</h3>
-          <p className="product-card__description">{displayDescription}</p>
+          <p className="product-card__description">{product.description}</p>
           <p className="product-card__meta">
-            評価 {displayRating.toFixed(1)} / 在庫 {displayStock} 個
+            評価 {product.rating.toFixed(1)} / 在庫 {product.stock} 個
           </p>
         </div>
 
         <div className="product-card__footer">
-          <span className="price-text">{displayPrice}</span>
+          <span className="price-text">{formatPrice(product.price)}</span>
           <Link className="text-link" href={`/products/${product.id}`}>
             詳細を見る
           </Link>

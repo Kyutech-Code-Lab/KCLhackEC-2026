@@ -6,37 +6,21 @@ const { filterProducts, getProductCategories } = await import(
 );
 const { formatPrice } = await import("../src/utils/formatPrice.ts");
 
-assert.ok(products.length >= 4, "Expected at least 4 sample products");
-assert.ok(
-  products.every(
-    (product) =>
-      typeof product.id === "string" &&
-      typeof product.name === "string" &&
-      typeof product.description === "string" &&
-      typeof product.price === "number",
-  ),
-  "Expected every product to follow the Product shape",
-);
+assert.equal(products.length, 8, "Expected 8 sample products");
 
 const categories = getProductCategories(products);
-assert.equal(categories[0], "すべて");
-for (const category of ["ガジェット", "ファッション", "本", "食品"]) {
-  assert.ok(categories.includes(category), `Missing category: ${category}`);
-}
+assert.deepEqual(categories, ["すべて", "ガジェット", "ファッション", "本", "食品"]);
 
 const nextProducts = filterProducts(products, "next", "すべて");
-assert.ok(Array.isArray(nextProducts), "filterProducts should return an array");
-assert.ok(
-  nextProducts.every((product) => products.some((item) => item.id === product.id)),
-  "filterProducts should only return products from the source list",
-);
+assert.equal(nextProducts.length, 1);
+assert.equal(nextProducts[0]?.name, "はじめての Next.js ノート");
 
 const foodProducts = filterProducts(products, "", "食品");
-assert.ok(foodProducts.length >= 1, "Expected at least one food product");
-assert.ok(
-  foodProducts.every((product) => product.category === "食品"),
-  "Category filtering should keep only matching products",
-);
+assert.equal(foodProducts.length, 2);
+
+const fashionBagProducts = filterProducts(products, "バッグ", "ファッション");
+assert.equal(fashionBagProducts.length, 1);
+assert.equal(fashionBagProducts[0]?.name, "キャンバストート");
 
 assert.equal(formatPrice(6800), "￥6,800");
 

@@ -8,9 +8,8 @@ const materialDir = path.join(rootDir, "materials", "2026");
 const requiredFiles = [
   "00-goals-and-plan.md",
   "01-participant-handson.md",
+  "02-instructor-guide.md",
   "03-challenges.md",
-  "98-challenge-answers.md",
-  "99-instructor-guide.md",
   path.join("slides", "kcl-frontend-2026.html"),
 ];
 

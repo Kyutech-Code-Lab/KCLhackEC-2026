@@ -38,21 +38,16 @@ export function ProductList({
       </div>
 
       <div className="products-grid">
-        {/* TODO(Phase 3-1):
-            products.map((product) => { ... }) を書いて、
-            配列の中の商品を 1 件ずつ ProductCard に変換します。 */}
-        {products.map((_, index) => {
-          // TODO(Phase 3-2): 引数の product を使って、同じ商品をカートから探します。
-          const cartItem = cartItems.find((item) => item.productId === "");
-          // TODO(Phase 3-3): 引数の product を使って、お気に入り状態を反映します。
-          const isFavorite = favoriteIds.includes("");
+        {/* map を使うと、配列の中身を 1 件ずつ ProductCard に変換できます。 */}
+        {products.map((product) => {
+          const cartItem = cartItems.find((item) => item.productId === product.id);
 
           return (
             <ProductCard
               cartQuantity={cartItem?.quantity ?? 0}
-              isFavorite={isFavorite}
-              key={`starter-${index}`}
-              product={products[index]!}
+              isFavorite={favoriteIds.includes(product.id)}
+              key={product.id}
+              product={product}
               onAddToCart={onAddToCart}
               onToggleFavorite={onToggleFavorite}
             />

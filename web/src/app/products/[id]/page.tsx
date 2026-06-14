@@ -37,7 +37,6 @@ export default async function ProductDetailPage({
     );
   }
 
-  // TODO(Phase 6): products.find(...) を自分で書いて、URL の id と商品データをつなげます。
   const product = products.find((item) => item.id === id);
 
   if (!product) {
@@ -82,13 +81,11 @@ export default async function ProductDetailPage({
             <dl className="detail-list">
               <div>
                 <dt>在庫</dt>
-                {/* TODO(Phase 6): 0 を product.stock に書き換えます。 */}
-                <dd>{0} 個</dd>
+                <dd>{product.stock} 個</dd>
               </div>
               <div>
                 <dt>評価</dt>
-                {/* TODO(Phase 6): 0 を product.rating に書き換えて toFixed(1) で表示します。 */}
-                <dd>{(0).toFixed(1)}</dd>
+                <dd>{product.rating.toFixed(1)}</dd>
               </div>
             </dl>
             <div className="info-box">
