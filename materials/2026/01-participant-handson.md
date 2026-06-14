@@ -17,7 +17,7 @@
 ## セットアップ
 
 ```bash
-cd Lecture0-NextJs/web
+cd web
 npm install
 npm run dev
 ```
@@ -201,7 +201,13 @@ Next.js では `app/products/[id]/page.tsx` が `/products/好きなID` に対�
 - `[id]` はURLから変わる部分
 - 詳細ページでは `params` から `id` を受け取る
 
-## Phase 7: お気に入りとカートを作る
+
+
+
+↓ここまで終わって理解した人は発展課題に挑戦しましょう！
+
+
+## Phase 7: お気に入りとカートを作る（余裕がある人向け）
 
 見るファイル:
 
@@ -231,7 +237,7 @@ return hasFavorite
 - `filter` は削除にも使える
 - `...currentFavoriteIds` は今の配列をコピーする書き方
 
-## Phase 8: 注文フォームを作る
+## Phase 8: 注文フォームを作る（余裕がある人向け）
 
 見るファイル:
 
@@ -297,6 +303,5 @@ localStorage は "use client" のあるファイルで、useEffect の中から�
 - 検索欄に文字を入れると表示が変わる
 - カテゴリを選ぶと商品が絞り込まれる
 - 商品カードから詳細ページへ移動できる
-- 注文ページを開ける
 
-余裕がある人は `03-challenges.md` に進んでください。
+余裕がある人は、発展課題として `02-challenges.md` に進んでください。

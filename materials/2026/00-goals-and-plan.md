@@ -47,8 +47,9 @@ KCL Hack 2026 の初回フロントエンド講座では、初心者が「Webア
 | --- | --- |
 | `README.md` | 教材全体の目次と完成アプリの説明 |
 | `materials/2026/01-participant-handson.md` | 参加者が手元で進める手順 |
-| `materials/2026/02-instructor-guide.md` | 講師の進行、時間配分、詰まりどころ |
-| `materials/2026/03-challenges.md` | 早く終わった人向けの追加課題 |
+| `materials/2026/02-challenges.md` | 早く終わった人向けの発展課題 |
+| `materials/2026/03-challenge-answers.md` | 発展課題の講師 / メンター向け解答メモ |
+| `materials/2026/99-instructor-guide.md` | 講師の進行、時間配分、詰まりどころ |
 | `materials/2026/slides/kcl-frontend-2026.html` | 当日投影用のHTMLスライド |
 | `web` | 完成版の Next.js アプリ |
 
